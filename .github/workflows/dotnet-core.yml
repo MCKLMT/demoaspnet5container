@@ -29,7 +29,7 @@ jobs:
         with:
           scope: resourcegroup
           subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-          resourceGroupName: DemoGitHub-rg
+          resourceGroupName: demoaspnet5container-rg
           template: ./Infrastructure/main.json
           deploymentMode: Incremental
 
