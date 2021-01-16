@@ -1,0 +1,48 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  Build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run Bicep build
+        uses: aliencube/bicep-build-actions@v0.1
+        with:
+          files: Infrastructure/main.bicep
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Azure Resource Manager (ARM) Template
+        uses: azure/arm-deploy@v1
+        id: deploy
+        with:
+          scope: resourcegroup
+          subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+          resourceGroupName: DemoGitHub-rg
+          template: ./Infrastructure/main.json
+          deploymentMode: Incremental
+
+      - name: Build image with ACR
+        uses: azure/CLI@v1
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az acr build --registry ${{ steps.deploy.outputs.registryNameOutput }} --image WebApp:latest ./WebApp/
+
+      - name: Deploy the image to App Service
+        uses: azure/CLI@v1
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az webapp config container set --name ${{ steps.deploy.outputs.webAppNameOutput }} --resource-group ${{ steps.deploy.outputs.resourceGroupOutput }} --docker-custom-image-name ${{ steps.deploy.outputs.registryNameOutput }}.azurecr.io/WebApp:latest --docker-registry-server-url https://${{ steps.deploy.outputs.registryNameOutput }}.azurecr.io
