@@ -69,6 +69,9 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2020-11-01-pr
   sku: {
     name: 'Standard'
   }
+  properties: {
+    adminUserEnabled: true
+  }
 }
 
 output resourceGroupOutput string = resourceGroup().name

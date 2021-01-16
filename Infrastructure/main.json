@@ -91,6 +91,9 @@
       "location": "[parameters('location')]",
       "sku": {
         "name": "Standard"
+      },
+      "properties": {
+        "adminUserEnabled": true
       }
     }
   ],
