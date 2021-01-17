@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [master]
 
+env:
+  GITHUB_SHA_SHORT: $(echo $GITHUB_SHA | cut -c1-8)
+
 jobs:
   Build:
     runs-on: ubuntu-20.04
@@ -38,11 +41,11 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az acr build --registry ${{ steps.deploy.outputs.registryNameOutput }} --image aspnet5webapp:${{ github.sha }} ./WebApp/
+            az acr build --registry ${{ steps.deploy.outputs.registryNameOutput }} --image aspnet5webapp:${{ GITHUB_SHA_SHORT }} ./WebApp/
 
       - name: Deploy the image to App Service
         uses: azure/CLI@v1
         with:
           azcliversion: latest
           inlineScript: |
-            az webapp config container set --name ${{ steps.deploy.outputs.webAppNameOutput }} --resource-group ${{ steps.deploy.outputs.resourceGroupOutput }} --docker-custom-image-name ${{ steps.deploy.outputs.registryNameOutput }}.azurecr.io/aspnet5webapp:${{ github.sha }} --docker-registry-server-url https://${{ steps.deploy.outputs.registryNameOutput }}.azurecr.io
+            az webapp config container set --name ${{ steps.deploy.outputs.webAppNameOutput }} --resource-group ${{ steps.deploy.outputs.resourceGroupOutput }} --docker-custom-image-name ${{ steps.deploy.outputs.registryNameOutput }}.azurecr.io/aspnet5webapp:${{ GITHUB_SHA_SHORT }} --docker-registry-server-url https://${{ steps.deploy.outputs.registryNameOutput }}.azurecr.io
