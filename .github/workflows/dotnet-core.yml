@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     env:
-      COMMIT_REF: ${GITHUB_SHA::8}
+      COMMIT_REF: $(git rev-parse --short "$GITHUB_SHA")
 
     steps:
       - uses: actions/checkout@v2
