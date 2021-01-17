@@ -6,12 +6,13 @@ on:
   pull_request:
     branches: [master]
 
-env:
-  GITHUB_SHA_SHORT: $(echo $GITHUB_SHA | cut -c1-8)
-
 jobs:
   Build:
     runs-on: ubuntu-20.04
+
+    env:
+      GITHUB_SHORT_SHA_1: ${GITHUB_SHA::8}
+      GITHUB_SHA_SHORT: $(echo $GITHUB_SHA | cut -c 1-8)
 
     steps:
       - uses: actions/checkout@v2
