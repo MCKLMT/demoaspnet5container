@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     env:
-      GITHUB_SHORT_SHA_1: ${GITHUB_SHA::8}
-      GITHUB_SHA_SHORT: $(echo $GITHUB_SHA | cut -c 1-8)
+      COMMIT_REF: $(git rev-parse --short "$GITHUB_SHA")
 
     steps:
       - uses: actions/checkout@v2
