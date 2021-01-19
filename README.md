@@ -1,5 +1,5 @@
 # demoaspnet5container
-Sample ASP.NET 5 application deployed to App Service on Linux as a container
+Sample ASP.NET 5 application deployed to App Service on Linux as a container with GitHub Actions
 
 
 ![.NET Core](https://github.com/MCKLMT/demoaspnet5container/workflows/.NET%20Core/badge.svg)
